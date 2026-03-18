@@ -179,7 +179,7 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                   height: 20mm;
                   object-fit: contain;
                   margin-bottom: 2mm;
-                  display: none !important;
+                  display: block;
                 }
                 .title {
                   font-weight: bold;
@@ -227,6 +227,7 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
             </head>
             <body>
               <div class="header">
+                <img src="${logoForPreview}" alt="${companyName}" class="logo">
                 <div class="title">COMANDA DE SERVICIO</div>
               </div>
               
@@ -450,7 +451,7 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                   height: 20mm;
                   object-fit: contain;
                   margin-bottom: 2mm;
-                  display: none !important;
+                  display: block;
                 }
                 .title {
                   font-weight: bold;
@@ -509,6 +510,7 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
               </div>
               
               <div class="header">
+                <img src="${logoForPreview}" alt="${companyName}" class="logo">
                 <div class="title">COMANDA DE SERVICIO</div>
               </div>
               

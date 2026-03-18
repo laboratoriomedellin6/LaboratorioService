@@ -103,7 +103,7 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                 height: 20mm;
                 object-fit: contain;
                 margin-bottom: 2mm;
-                display: none !important;
+                display: block;
               }
               .title {
                 font-weight: bold;
@@ -163,6 +163,7 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
           </head>
           <body>
             <div class="header">
+              <img src="${logoForPreview}" alt="${companyName}" class="logo">
               <div class="title">COMANDA MÚLTIPLE DE SERVICIO</div>
             </div>
             
@@ -522,7 +523,7 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                   height: 20mm;
                   object-fit: contain;
                   margin-bottom: 2mm;
-                  display: none !important;
+                  display: block;
                 }
                 .title {
                   font-weight: bold;
@@ -593,6 +594,7 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
               </div>
               
               <div class="header">
+                <img src="${logoForPreview}" alt="${companyName}" class="logo">
                 <div class="title">COMANDA MÚLTIPLE DE SERVICIO</div>
               </div>
               

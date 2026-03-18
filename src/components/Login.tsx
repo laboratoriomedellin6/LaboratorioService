@@ -59,15 +59,15 @@ const Login: React.FC = () => {
             <div className="card shadow-lg border-0">
               <div className="card-body p-3 p-sm-4 p-md-5">
                 <div className="text-center mb-3 mb-md-4">
-                  <div className="d-flex justify-content-center align-items-center mb-3" style={{ minHeight: '80px' }}>
+                  <div className="d-flex justify-content-center align-items-center mb-3" style={{ minHeight: '110px' }}>
                     {logoWithCacheBust && (
                       <img 
                         src={logoWithCacheBust} 
                         alt={companyName} 
                         className="img-fluid"
                         style={{ 
-                          width: '200px', 
-                          height: '80px', 
+                          width: '280px', 
+                          height: '180px', 
                           objectFit: 'contain' 
                         }}
                       />

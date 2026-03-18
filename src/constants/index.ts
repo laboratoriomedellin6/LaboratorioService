@@ -34,13 +34,13 @@ export const USER_ROLE_LABELS = {
 // Print Settings
 export const PRINT_SETTINGS = {
   STICKER: {
-    WIDTH: '7cm',
-    HEIGHT: '5cm',
+    WIDTH: '5cm',
+    HEIGHT: '2.5cm',
     PADDING: '2mm',
-    LOGO_WIDTH: '4cm',
+    LOGO_WIDTH: '15mm',
     LOGO_MARGIN: '2mm',
-    FONT_SIZE: '9px',
-    LINE_HEIGHT: '1.2'
+    FONT_SIZE: '8px',
+    LINE_HEIGHT: '1.15'
   },
   TIRILLA: {
     WIDTH: '80mm',

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { FileText, Printer, Download, X, Tag } from 'lucide-react'
 import type { ServiceOrder, Customer } from '../types'
 import logoGamebox from '../assets/logo-gamebox.png'
-import { useImageToBase64 } from '../hooks'
 import { useCompanySettings } from '../hooks'
 import { formatDateForPrint, getStatusDisplayName } from '../utils'
 import { useAuth } from '../contexts/AuthContext'
@@ -27,8 +26,6 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
   const branchName = receivedByUser?.sede || 'Parque Caldas'
   const branchPhone = receivedByUser?.branch_phone || '3116638302'
   
-  const { base64: logoBase64 } = useImageToBase64(displayLogo)
-  
   // Para las vistas previas, agregar timestamp para evitar cache
   const logoForPreview = displayLogo.includes('supabase') 
     ? `${displayLogo.split('?')[0]}?t=${Date.now()}` 
@@ -40,7 +37,7 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
     
     if (printWindow) {
       if (viewType === 'sticker') {
-        // Template HTML para sticker optimizado 7cm x 5cm
+        // Template HTML para sticker optimizado 5cm x 2.5cm
         printWindow.document.write(`
           <!DOCTYPE html>
           <html>
@@ -58,13 +55,13 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                     margin: 0 !important;
                     padding: 0 !important;
                     background: white;
-                    width: 7cm;
-                    height: 5cm;
+                    width: 5cm;
+                    height: 2.5cm;
                     overflow: hidden;
                   }
                 .sticker-container {
-                  width: 7cm;
-                  height: 5cm;
+                  width: 5cm;
+                  height: 2.5cm;
                   border: 2px solid #000;
                   padding: 2mm;
                   display: flex;
@@ -75,10 +72,10 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                     margin: 0;
                   }
                 .logo {
-                  width: 25mm;
-                  height: 12mm;
+                  width: 15mm;
+                  height: 8mm;
                   margin: 0 auto 1.5mm auto;
-                  display: block;
+                  display: none !important;
                   object-fit: contain;
                 }
                 .info {
@@ -98,37 +95,35 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                   color: #000;
                 }
                 .problem-section {
-                  margin-top: 1.5mm;
-                  padding-top: 1.5mm;
-                  border-top: 1px solid #999;
-                  font-size: 9.5px;
-                  line-height: 1.2;
+                  margin-top: 0.5mm;
+                  padding-top: 0;
+                  font-size: 7.5px;
+                  line-height: 1;
                 }
                 .problem-text {
-                  margin-top: 0.5mm;
-                  display: -webkit-box;
-                  -webkit-line-clamp: 4;
-                  -webkit-box-orient: vertical;
+                  margin-top: 0;
+                  font-size: 7.5px;
+                  line-height: 1;
                   overflow: hidden;
                   text-overflow: ellipsis;
-                  white-space: normal;
-                  max-height: 12mm;
+                  white-space: nowrap;
+                  max-height: auto;
                 }
                   @media print {
                     html, body {
                       margin: 0 !important;
                       padding: 0 !important;
-                      width: 7cm;
-                      height: 5cm;
+                      width: 5cm;
+                      height: 2.5cm;
                       overflow: hidden;
                     }
                     @page {
                       margin: 0 !important;
-                      size: 7cm 5cm;
+                      size: 5cm 2.5cm;
                     }
                     .sticker-container {
-                      width: 7cm;
-                      height: 5cm;
+                      width: 5cm;
+                      height: 2.5cm;
                       margin: 0;
                     }
                   }
@@ -136,7 +131,6 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
             </head>
             <body>
               <div class="sticker-container">
-                <img src="${logoBase64}" alt="GameBox Logo" class="logo">
                 <div class="info">
                   <div class="info-line"><strong>ORDEN:</strong> ${order.order_number}</div>
                   <div class="info-line"><strong>CLIENTE:</strong> ${customer.full_name.slice(0, 20)}</div>
@@ -185,6 +179,7 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                   height: 20mm;
                   object-fit: contain;
                   margin-bottom: 2mm;
+                  display: none !important;
                 }
                 .title {
                   font-weight: bold;
@@ -232,7 +227,6 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
             </head>
             <body>
               <div class="header">
-                <img src="${logoBase64}" alt="GameBox Logo" class="logo">
                 <div class="title">COMANDA DE SERVICIO</div>
               </div>
               
@@ -294,7 +288,7 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
     
     if (printWindow) {
       if (viewType === 'sticker') {
-        // Template optimizado para sticker 7cm x 5cm
+        // Template optimizado para sticker 5cm x 2.5cm
         printWindow.document.write(`
           <!DOCTYPE html>
           <html>
@@ -322,8 +316,8 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                   font-size: 14px;
                 }
                 .sticker-container {
-                  width: 7cm;
-                  height: 5cm;
+                  width: 5cm;
+                  height: 2.5cm;
                   border: 2px solid #000;
                   padding: 2mm;
                   display: flex;
@@ -333,10 +327,10 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                   margin: 0 auto;
                 }
                 .logo {
-                  width: 25mm;
-                  height: 12mm;
+                  width: 15mm;
+                  height: 8mm;
                   margin: 0 auto 1.5mm auto;
-                  display: block;
+                  display: none !important;
                   object-fit: contain;
                 }
                 .info {
@@ -356,21 +350,19 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                   color: #000;
                 }
                 .problem-section {
-                  margin-top: 1.5mm;
-                  padding-top: 1.5mm;
-                  border-top: 1px solid #999;
-                  font-size: 9.5px;
-                  line-height: 1.2;
+                  margin-top: 0.5mm;
+                  padding-top: 0;
+                  font-size: 7.5px;
+                  line-height: 1;
                 }
                 .problem-text {
-                  margin-top: 0.5mm;
-                  display: -webkit-box;
-                  -webkit-line-clamp: 4;
-                  -webkit-box-orient: vertical;
+                  margin-top: 0;
+                  font-size: 7.5px;
+                  line-height: 1;
                   overflow: hidden;
                   text-overflow: ellipsis;
-                  white-space: normal;
-                  max-height: 12mm;
+                  white-space: nowrap;
+                  max-height: auto;
                 }
                 @media print {
                   .instructions {
@@ -382,11 +374,11 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                   }
                   @page {
                     margin: 0;
-                    size: 7cm 5cm;
+                    size: 5cm 2.5cm;
                   }
                   .sticker-container {
-                    width: 7cm;
-                    height: 5cm;
+                    width: 5cm;
+                    height: 2.5cm;
                   }
                 }
               </style>
@@ -397,10 +389,9 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                 1. Presiona <strong>Ctrl+P</strong> (o Cmd+P en Mac)<br>
                 2. En "Destino" selecciona <strong>"Guardar como PDF"</strong><br>
                 3. Haz clic en <strong>"Guardar"</strong><br>
-                <strong>📏 Tamaño de impresión:</strong> 7cm × 5cm
+                <strong>📏 Tamaño de impresión:</strong> 5cm × 2.5cm
               </div>
               <div class="sticker-container">
-                <img src="${logoBase64}" alt="GameBox Logo" class="logo">
                 <div class="info">
                   <div class="info-line"><strong>ORDEN:</strong> ${order.order_number}</div>
                   <div class="info-line"><strong>CLIENTE:</strong> ${customer.full_name.slice(0, 20)}</div>
@@ -459,6 +450,7 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
                   height: 20mm;
                   object-fit: contain;
                   margin-bottom: 2mm;
+                  display: none !important;
                 }
                 .title {
                   font-weight: bold;
@@ -517,7 +509,6 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
               </div>
               
               <div class="header">
-                <img src="${logoBase64}" alt="GameBox Logo" class="logo">
                 <div class="title">COMANDA DE SERVICIO</div>
               </div>
               
@@ -616,46 +607,41 @@ const ComandaPreview: React.FC<ComandaPreviewProps> = ({ order, customer, onClos
               {/* Preview Area */}
               {viewType === 'sticker' ? (
                 // Vista previa con imagen para sticker optimizado 7x5cm
-                <div className="bg-light p-3 rounded mb-3 text-center" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                  <div className="border rounded p-2 d-inline-block bg-white" style={{ 
+                <div className="text-center mb-3" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                  <div className="border rounded d-inline-block bg-white" style={{ 
                     width: '280px', 
-                    height: '200px', 
+                    height: '140px', 
                     display: 'flex', 
                     flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    fontFamily: 'Arial Black, Arial Bold, sans-serif',
-                    fontWeight: 900
+                    fontFamily: 'Arial, sans-serif',
+                    fontWeight: 700,
+                    overflow: 'hidden',
+                    boxSizing: 'border-box',
+                    padding: '2mm',
+                    border: '2px solid #000'
                   }}>
-                    {/* Logo optimizado */}
-                    <img src={logoForPreview} alt={companyName} style={{ 
-                      width: '100px', 
-                      height: '48px', 
-                      margin: '0 auto 5px auto',
-                      display: 'block',
-                      objectFit: 'contain'
-                    }} />
-                    
                     <div style={{ 
-                      fontSize: '13px', 
+                      fontSize: '10px', 
                       textAlign: 'left', 
                       flexGrow: 1,
-                      lineHeight: '1.3'
+                      lineHeight: '1.2',
+                      overflow: 'hidden'
                     }}>
-                      <div style={{ marginBottom: '2px' }}><strong>ORDEN:</strong> {order.order_number}</div>
-                      <div style={{ marginBottom: '2px' }}><strong>CLIENTE:</strong> {customer.full_name.slice(0, 20)}</div>
-                      <div style={{ marginBottom: '2px' }}><strong>TEL:</strong> {(customer.phone || 'N/A').slice(0, 15)}</div>
-                      <div style={{ marginBottom: '2px' }}><strong>SERIE:</strong> {(order.serial_number || 'N/A').slice(0, 18)}</div>
-                      <div style={{ fontSize: '12px', marginTop: '4px', borderTop: '1px solid #ddd', paddingTop: '4px' }}>
-                        <strong>PROBLEMA:</strong><br />
-                        <div style={{ marginTop: '2px', lineHeight: '1.2' }}>
-                          {order.problem_description.slice(0, 120)}{order.problem_description.length > 120 ? '...' : ''}
+                      <div style={{ marginBottom: '0.8px' }}><strong>ORDEN:</strong> {order.order_number.slice(0, 16)}</div>
+                      <div style={{ marginBottom: '0.8px' }}><strong>CLIENTE:</strong> {customer.full_name.slice(0, 16)}</div>
+                      <div style={{ marginBottom: '0.8px' }}><strong>TEL:</strong> {(customer.phone || 'N/A').slice(0, 14)}</div>
+                      <div style={{ marginBottom: '0.8px' }}><strong>SERIE:</strong> {(order.serial_number || 'N/A').slice(0, 16)}</div>
+                      <div style={{ fontSize: '8px', marginTop: '0.5px' }}>
+                        <strong>PROBLEMA:</strong>
+                        <div style={{ marginTop: '0.3px', lineHeight: '1.1', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {order.problem_description.slice(0, 50)}
                         </div>
                       </div>
                     </div>
                   </div>
                   
                   <div className="mt-2 text-muted" style={{ fontSize: '12px' }}>
-                    📏 <strong>Tamaño de impresión:</strong> 7cm × 5cm
+                    📏 <strong>Tamaño de impresión:</strong> 5cm × 2.5cm
                   </div>
                 </div>
               ) : (

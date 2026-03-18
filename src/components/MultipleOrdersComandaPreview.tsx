@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { FileText, Printer, Download, X, Tag, Package } from 'lucide-react'
 import type { ServiceOrder, Customer } from '../types'
 import logoGamebox from '../assets/logo-gamebox.png'
-import { useImageToBase64 } from '../hooks'
 import { useCompanySettings } from '../hooks'
 import { formatDateForPrint, getStatusDisplayName } from '../utils'
 import { useAuth } from '../contexts/AuthContext'
@@ -30,9 +29,6 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
   const receivedByUser = orders[0]?.received_by || user
   const branchName = receivedByUser?.sede || 'Parque Caldas'
   const branchPhone = receivedByUser?.branch_phone || '3116638302'
-  
-  // Usar hook personalizado para conversión de imagen
-  const { base64: logoBase64 } = useImageToBase64(displayLogo)
   
   // Para las vistas previas, agregar timestamp para evitar cache
   const logoForPreview = displayLogo.includes('supabase') 
@@ -107,6 +103,7 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                 height: 20mm;
                 object-fit: contain;
                 margin-bottom: 2mm;
+                display: none !important;
               }
               .title {
                 font-weight: bold;
@@ -166,7 +163,6 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
           </head>
           <body>
             <div class="header">
-              <img src="${logoBase64}" alt="GameBox Logo" class="logo">
               <div class="title">COMANDA MÚLTIPLE DE SERVICIO</div>
             </div>
             
@@ -239,13 +235,13 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                   margin: 0 !important;
                   padding: 0 !important;
                   background: white;
-                  width: 7cm;
-                  height: 5cm;
+                  width: 5cm;
+                  height: 2.5cm;
                   overflow: hidden;
                 }
               .sticker-container {
-                width: 7cm;
-                height: 5cm;
+                width: 5cm;
+                height: 2.5cm;
                 border: 2px solid #000;
                 padding: 2mm;
                 display: flex;
@@ -258,11 +254,11 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                 page-break-inside: avoid;
               }
               .logo {
-                width: 25mm;
-                height: 12mm;
+                width: 15mm;
+                height: 8mm;
                 object-fit: contain;
                 margin: 0 auto 1.5mm auto;
-                display: block;
+                display: none !important;
               }
               .info {
                 flex-grow: 1;
@@ -281,37 +277,35 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                 color: #000;
               }
               .problem-section {
-                margin-top: 1.5mm;
-                padding-top: 1.5mm;
-                border-top: 1px solid #999;
-                font-size: 9.5px;
-                line-height: 1.2;
+                margin-top: 0.5mm;
+                padding-top: 0;
+                font-size: 7.5px;
+                line-height: 1;
               }
               .problem-text {
-                margin-top: 0.5mm;
-                display: -webkit-box;
-                -webkit-line-clamp: 4;
-                -webkit-box-orient: vertical;
+                margin-top: 0;
+                font-size: 7.5px;
+                line-height: 1;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                white-space: normal;
-                max-height: 12mm;
+                white-space: nowrap;
+                max-height: auto;
               }
                 @media print {
                   html, body {
                     margin: 0 !important;
                     padding: 0 !important;
-                    width: 7cm;
-                    height: 5cm;
+                    width: 5cm;
+                    height: 2.5cm;
                     overflow: visible;
                   }
                   @page {
                     margin: 0 !important;
-                    size: 7cm 5cm;
+                    size: 5cm 2.5cm;
                   }
                   .sticker-container {
-                    width: 7cm;
-                    height: 5cm;
+                    width: 5cm;
+                    height: 2.5cm;
                     margin: 0;
                     page-break-after: always;
                     page-break-inside: avoid;
@@ -325,7 +319,6 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
           <body>
             ${orders.map((order) => `
               <div class="sticker-container">
-                <img src="${logoBase64}" alt="GameBox Logo" class="logo">
                 <div class="info">
                   <div class="info-line"><strong>ORDEN:</strong> ${order.order_number}</div>
                   <div class="info-line"><strong>CLIENTE:</strong> ${customer.full_name.slice(0, 20)}</div>
@@ -356,7 +349,7 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
     
     if (printWindow) {
       if (viewType === 'individual-stickers') {
-        // Template para stickers individuales optimizado 7cm x 5cm
+        // Template para stickers individuales optimizado 5cm x 2.5cm
         printWindow.document.write(`
           <!DOCTYPE html>
           <html>
@@ -384,8 +377,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                   font-size: 14px;
                 }
                 .sticker-container {
-                  width: 7cm;
-                  height: 5cm;
+                  width: 5cm;
+                  height: 2.5cm;
                   border: 2px solid #000;
                   padding: 2mm;
                   display: flex;
@@ -398,11 +391,11 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                   page-break-inside: avoid;
                 }
                 .logo {
-                  width: 25mm;
-                  height: 12mm;
+                  width: 15mm;
+                  height: 8mm;
                   object-fit: contain;
                   margin: 0 auto 1.5mm auto;
-                  display: block;
+                  display: none !important;
                 }
                 .info {
                   flex-grow: 1;
@@ -421,21 +414,19 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                   color: #000;
                 }
                 .problem-section {
-                  margin-top: 1.5mm;
-                  padding-top: 1.5mm;
-                  border-top: 1px solid #999;
-                  font-size: 9.5px;
-                  line-height: 1.2;
+                  margin-top: 0.5mm;
+                  padding-top: 0;
+                  font-size: 7.5px;
+                  line-height: 1;
                 }
                 .problem-text {
-                  margin-top: 0.5mm;
-                  display: -webkit-box;
-                  -webkit-line-clamp: 4;
-                  -webkit-box-orient: vertical;
+                  margin-top: 0;
+                  font-size: 7.5px;
+                  line-height: 1;
                   overflow: hidden;
                   text-overflow: ellipsis;
-                  white-space: normal;
-                  max-height: 12mm;
+                  white-space: nowrap;
+                  max-height: auto;
                 }
                 @media print {
                   .instructions {
@@ -447,11 +438,11 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                   }
                   @page {
                     margin: 0;
-                    size: 7cm 5cm;
+                    size: 5cm 2.5cm;
                   }
                   .sticker-container {
-                    width: 7cm;
-                    height: 5cm;
+                    width: 5cm;
+                    height: 2.5cm;
                     page-break-after: always;
                     page-break-inside: avoid;
                     margin: 0;
@@ -468,11 +459,10 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                 1. Presiona <strong>Ctrl+P</strong> (o Cmd+P en Mac)<br>
                 2. En "Destino" selecciona <strong>"Guardar como PDF"</strong><br>
                 3. Haz clic en <strong>"Guardar"</strong><br>
-                <strong>📏 Tamaño:</strong> ${orders.length} stickers de 7cm × 5cm
+                <strong>📏 Tamaño:</strong> ${orders.length} stickers de 5cm × 2.5cm
               </div>
               ${orders.map((order) => `
                 <div class="sticker-container">
-                  <img src="${logoBase64}" alt="GameBox Logo" class="logo">
                   <div class="info">
                     <div class="info-line"><strong>ORDEN:</strong> ${order.order_number}</div>
                     <div class="info-line"><strong>CLIENTE:</strong> ${customer.full_name.slice(0, 20)}</div>
@@ -532,6 +522,7 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                   height: 20mm;
                   object-fit: contain;
                   margin-bottom: 2mm;
+                  display: none !important;
                 }
                 .title {
                   font-weight: bold;
@@ -602,7 +593,6 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
               </div>
               
               <div class="header">
-                <img src="${logoBase64}" alt="GameBox Logo" class="logo">
                 <div class="title">COMANDA MÚLTIPLE DE SERVICIO</div>
               </div>
               
@@ -697,43 +687,40 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
               {/* Preview Area */}
               {viewType === 'individual-stickers' ? (
                 // Vista previa de stickers individuales optimizados
-                <div className="bg-light p-3 rounded mb-3" style={{ 
+                <div style={{ 
                   maxHeight: '500px', 
                   overflowY: 'auto' 
                 }}>
-                  {orders.map((order, index) => (
-                    <div key={order.id} className="mx-auto border rounded p-2 bg-white mb-3" style={{ 
+                  {orders.map((order) => (
+                    <div key={order.id} className="mx-auto border rounded bg-white mb-2" style={{ 
                       width: '280px', 
-                      height: '200px', 
+                      height: '140px', 
                       display: 'flex', 
                       flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      fontFamily: 'Arial, sans-serif'
+                      fontFamily: 'Arial, sans-serif',
+                      fontWeight: 700,
+                      overflow: 'hidden',
+                      boxSizing: 'border-box',
+                      padding: '2mm',
+                      border: '2px solid #000'
                     }}>
-                      {/* Logo optimizado */}
-                      <img src={logoForPreview} alt={companyName} style={{ 
-                        width: '100px', 
-                        height: '48px', 
-                        margin: '0 auto 5px auto',
-                        display: 'block',
-                        objectFit: 'contain'
-                      }} />
-                      
                       <div style={{ 
-                        fontSize: '11px', 
+                        fontSize: '10px', 
                         textAlign: 'left', 
                         flexGrow: 1,
-                        lineHeight: '1.3'
+                        lineHeight: '1.2',
+                        overflow: 'hidden'
                       }}>
-                        <div style={{ marginBottom: '2px' }}><strong>ORDEN:</strong> {order.order_number}</div>
-                        <div style={{ marginBottom: '2px' }}><strong>CLIENTE:</strong> {customer.full_name.slice(0, 25)}</div>
-                        <div style={{ marginBottom: '2px' }}><strong>TEL:</strong> {(customer.phone || 'N/A').slice(0, 15)}</div>
-                        <div style={{ marginBottom: '2px' }}><strong>DISPOSITIVO:</strong> {(order.device_type + ' ' + order.device_brand).slice(0, 22)}</div>
-                        <div><strong>SERIE:</strong> {(order.serial_number || 'N/A').slice(0, 20)}</div>
-                      </div>
-                      
-                      <div className="text-center text-muted" style={{ fontSize: '9px', marginTop: '5px' }}>
-                        Sticker {index + 1} de {orders.length} - 7cm × 5cm
+                        <div style={{ marginBottom: '0.8px' }}><strong>ORDEN:</strong> {order.order_number.slice(0, 16)}</div>
+                        <div style={{ marginBottom: '0.8px' }}><strong>CLIENTE:</strong> {customer.full_name.slice(0, 16)}</div>
+                        <div style={{ marginBottom: '0.8px' }}><strong>TEL:</strong> {(customer.phone || 'N/A').slice(0, 14)}</div>
+                        <div style={{ marginBottom: '0.8px' }}><strong>SERIE:</strong> {(order.serial_number || 'N/A').slice(0, 16)}</div>
+                        <div style={{ fontSize: '8px', marginTop: '0.5px' }}>
+                          <strong>PROBLEMA:</strong>
+                          <div style={{ marginTop: '0.3px', lineHeight: '1.1', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {order.problem_description.slice(0, 50)}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}

@@ -324,7 +324,6 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
             ${orders.map((order) => `
               <div class="sticker-container">
                 <div class="info">
-                  <div class="info-line"><strong>ORDEN:</strong> ${order.order_number}</div>
                   <div class="info-line"><strong>CLIENTE:</strong> ${customer.full_name.slice(0, 20)}</div>
                   <div class="info-line"><strong>TEL:</strong> ${(customer.phone || customer.cedula || 'N/A').slice(0, 15)}</div>
                   ${customer.cedula ? `<div class="info-line"><strong>CÉDULA:</strong> ${customer.cedula.slice(0, 15)}</div>` : ''}
@@ -469,7 +468,6 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
               ${orders.map((order) => `
                 <div class="sticker-container">
                   <div class="info">
-                    <div class="info-line"><strong>ORDEN:</strong> ${order.order_number}</div>
                     <div class="info-line"><strong>CLIENTE:</strong> ${customer.full_name.slice(0, 20)}</div>
                     <div class="info-line"><strong>TEL:</strong> ${(customer.phone || customer.cedula || 'N/A').slice(0, 15)}</div>
                     ${customer.cedula ? `<div class="info-line"><strong>CÉDULA:</strong> ${customer.cedula.slice(0, 15)}</div>` : ''}
@@ -721,7 +719,6 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                         lineHeight: '1.2',
                         overflow: 'hidden'
                       }}>
-                        <div style={{ marginBottom: '0.8px' }}><strong>ORDEN:</strong> {order.order_number.slice(0, 16)}</div>
                         <div style={{ marginBottom: '0.8px' }}><strong>CLIENTE:</strong> {customer.full_name.slice(0, 16)}</div>
                         <div style={{ marginBottom: '0.8px' }}><strong>TEL:</strong> {(customer.phone || customer.cedula || 'N/A').slice(0, 14)}</div>
                         {customer.cedula && <div style={{ marginBottom: '0.8px' }}><strong>CÉDULA:</strong> {customer.cedula.slice(0, 14)}</div>}

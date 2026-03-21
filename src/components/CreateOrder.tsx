@@ -120,7 +120,7 @@ const CreateOrder: React.FC = () => {
     message: ''
   })
   
-  const { getCustomerByCedula, createCustomer } = useCustomers()
+  const { getCustomerByPhone, createCustomer } = useCustomers()
   const { createServiceOrder, createMultipleDeviceOrder } = useServiceOrders()
 
   const closeModal = () => {
@@ -156,7 +156,6 @@ const CreateOrder: React.FC = () => {
       return
     }
 
-    // Validar formato de teléfono
     const phoneError = validators.phone(sanitizedPhone)
     if (phoneError) {
       showErrorModal(phoneError)
@@ -165,16 +164,14 @@ const CreateOrder: React.FC = () => {
     
     setLoading(true)
     try {
-      // Buscar por el campo cedula que ahora almacena el teléfono
-      const foundCustomer = await getCustomerByCedula(sanitizedPhone)
+      const foundCustomer = await getCustomerByPhone(sanitizedPhone)
       
       if (foundCustomer) {
         setCustomer(foundCustomer)
         setShowNewCustomerForm(false)
       } else {
         setCustomer(null)
-        // Usar el teléfono tanto en cedula como en phone
-        setNewCustomer({ ...newCustomer, cedula: sanitizedPhone, phone: sanitizedPhone })
+        setNewCustomer((prev) => ({ ...prev, phone: sanitizedPhone, cedula: '' }))
         setShowNewCustomerForm(true)
       }
     } catch (error) {
@@ -186,16 +183,16 @@ const CreateOrder: React.FC = () => {
   }
 
   const handleCreateCustomer = async () => {
-    // Sanitizar todos los campos (cedula ahora es el teléfono)
+    // Sanitizar todos los campos
     const sanitizedData = {
-      cedula: sanitizeInput.phone(newCustomer.cedula),
+      cedula: sanitizeInput.cedula(newCustomer.cedula),
       full_name: sanitizeInput.name(newCustomer.full_name),
-      phone: sanitizeInput.phone(newCustomer.cedula), // Mismo valor que cedula
+      phone: sanitizeInput.phone(newCustomer.phone),
       email: sanitizeInput.email(newCustomer.email),
     }
 
     // Validar campos requeridos
-    if (!sanitizedData.cedula) {
+    if (!sanitizedData.phone) {
       showErrorModal('El número de celular es requerido')
       return
     }
@@ -205,8 +202,16 @@ const CreateOrder: React.FC = () => {
       return
     }
 
-    // Validar formato de teléfono
-    const phoneError = validators.phone(sanitizedData.cedula)
+    // Validar formato de cédula solo si fue ingresada
+    if (sanitizedData.cedula) {
+      const cedulaValidationError = validators.cedula(sanitizedData.cedula)
+      if (cedulaValidationError) {
+        showErrorModal(cedulaValidationError)
+        return
+      }
+    }
+
+    const phoneError = validators.phone(sanitizedData.phone)
     if (phoneError) {
       showErrorModal(phoneError)
       return
@@ -596,6 +601,9 @@ const CreateOrder: React.FC = () => {
                           <strong>Celular:</strong> {customer.phone || customer.cedula}
                         </div>
                         <div className="col-md-6">
+                          <strong>Cédula:</strong> {customer.cedula || 'No registrada'}
+                        </div>
+                        <div className="col-md-6">
                           <strong>Email:</strong> {customer.email || 'No registrado'}
                         </div>
                       </div>
@@ -626,17 +634,15 @@ const CreateOrder: React.FC = () => {
               <div className="card-body">
                 <div className="row g-2 g-sm-3">
                   <div className="col-12 col-sm-6">
-                    <label className="form-label fw-semibold small">Número de Celular <span className="text-danger">*</span></label>
+                    <label className="form-label fw-semibold small">Cédula</label>
                     <input
-                      type="tel"
+                      type="text"
                       className="form-control"
-                      placeholder="3001234567"
                       value={newCustomer.cedula}
-                      onChange={(e) => setNewCustomer({ ...newCustomer, cedula: e.target.value, phone: e.target.value })}
-                      required
+                      onChange={(e) => setNewCustomer({ ...newCustomer, cedula: e.target.value })}
                       style={{minHeight: '44px'}}
                     />
-                    <small className="text-muted">Este número se usará para identificar al cliente</small>
+                    <small className="text-muted">Documento de identificación del cliente</small>
                   </div>
                   <div className="col-12 col-sm-6">
                     <label className="form-label fw-semibold small">Nombre Completo <span className="text-danger">*</span></label>
@@ -649,14 +655,15 @@ const CreateOrder: React.FC = () => {
                       style={{minHeight: '44px'}}
                     />
                   </div>
-                  <div className="col-12 col-sm-6" style={{display: 'none'}}>
-                    <label className="form-label fw-semibold small">Teléfono</label>
+                  <div className="col-12 col-sm-6">
+                    <label className="form-label fw-semibold small">Teléfono / Celular <span className="text-danger">*</span></label>
                     <input
-                      type="text"
+                      type="tel"
                       className="form-control"
-                      placeholder="+57 300 123 4567"
+                      placeholder="3001234567"
                       value={newCustomer.phone}
                       onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+                      required
                       style={{minHeight: '44px'}}
                     />
                   </div>

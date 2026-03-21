@@ -24,6 +24,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
   // Usar logo de configuración si está disponible, sino usar logo por defecto
   const displayLogo = settings?.logo_url || logoGamebox
   const companyName = settings?.company_name || 'GameBox Service'
+  const primaryColor = settings?.primary_color || '#0d6efd'
+  const secondaryColor = settings?.secondary_color || '#6c757d'
   
   // Obtener sede y teléfono del usuario que recibió la orden o del usuario actual
   const receivedByUser = orders[0]?.received_by || user
@@ -177,7 +179,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
               
               <div class="section">
                 <div><span class="label">CLIENTE:</span> ${customer.full_name}</div>
-                ${customer.phone ? `<div><span class="label">TEL:</span> ${customer.phone}</div>` : ''}
+                ${(customer.phone || customer.cedula) ? `<div><span class="label">TEL:</span> ${customer.phone || customer.cedula}</div>` : ''}
+                ${customer.cedula ? `<div><span class="label">CÉDULA:</span> ${customer.cedula}</div>` : ''}
               </div>
               
               <div class="section">
@@ -323,7 +326,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                 <div class="info">
                   <div class="info-line"><strong>ORDEN:</strong> ${order.order_number}</div>
                   <div class="info-line"><strong>CLIENTE:</strong> ${customer.full_name.slice(0, 20)}</div>
-                  <div class="info-line"><strong>TEL:</strong> ${(customer.phone || 'N/A').slice(0, 15)}</div>
+                  <div class="info-line"><strong>TEL:</strong> ${(customer.phone || customer.cedula || 'N/A').slice(0, 15)}</div>
+                  ${customer.cedula ? `<div class="info-line"><strong>CÉDULA:</strong> ${customer.cedula.slice(0, 15)}</div>` : ''}
                   <div class="info-line"><strong>SERIE:</strong> ${(order.serial_number || 'N/A').slice(0, 18)}</div>
                   <div class="problem-section">
                     <div><strong>PROBLEMA:</strong></div>
@@ -467,7 +471,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                   <div class="info">
                     <div class="info-line"><strong>ORDEN:</strong> ${order.order_number}</div>
                     <div class="info-line"><strong>CLIENTE:</strong> ${customer.full_name.slice(0, 20)}</div>
-                    <div class="info-line"><strong>TEL:</strong> ${(customer.phone || 'N/A').slice(0, 15)}</div>
+                    <div class="info-line"><strong>TEL:</strong> ${(customer.phone || customer.cedula || 'N/A').slice(0, 15)}</div>
+                    ${customer.cedula ? `<div class="info-line"><strong>CÉDULA:</strong> ${customer.cedula.slice(0, 15)}</div>` : ''}
                     <div class="info-line"><strong>SERIE:</strong> ${(order.serial_number || 'N/A').slice(0, 18)}</div>
                     <div class="problem-section">
                       <div><strong>PROBLEMA:</strong></div>
@@ -606,7 +611,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                 
                 <div class="section">
                   <div><span class="label">CLIENTE:</span> ${customer.full_name}</div>
-                  ${customer.phone ? `<div><span class="label">TEL:</span> ${customer.phone}</div>` : ''}
+                  ${(customer.phone || customer.cedula) ? `<div><span class="label">TEL:</span> ${customer.phone || customer.cedula}</div>` : ''}
+                  ${customer.cedula ? `<div><span class="label">CÉDULA:</span> ${customer.cedula}</div>` : ''}
                 </div>
                 
                 <div class="section">
@@ -650,8 +656,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
       {/* Modal Backdrop */}
       <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
         <div className="modal-dialog modal-xl modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header bg-success text-white">
+          <div className="modal-content border-0 shadow-lg">
+            <div className="modal-header text-white" style={{ backgroundColor: primaryColor }}>
               <h5 className="modal-title d-flex align-items-center">
                 <Package size={20} className="me-2" />
                 Vista Previa - Múltiples Dispositivos ({orders.length} órdenes)
@@ -669,7 +675,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                 <div className="btn-group w-100" role="group">
                   <button
                     type="button"
-                    className={`btn ${viewType === 'comanda' ? 'btn-primary' : 'btn-outline-primary'}`}
+                    className={`btn ${viewType === 'comanda' ? 'text-white' : ''}`}
+                    style={viewType === 'comanda' ? { backgroundColor: primaryColor, borderColor: primaryColor } : { color: primaryColor, borderColor: primaryColor }}
                     onClick={() => setViewType('comanda')}
                   >
                     <FileText className="me-1" size={16} />
@@ -677,7 +684,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                   </button>
                   <button
                     type="button"
-                    className={`btn ${viewType === 'individual-stickers' ? 'btn-primary' : 'btn-outline-primary'}`}
+                    className={`btn ${viewType === 'individual-stickers' ? 'text-white' : ''}`}
+                    style={viewType === 'individual-stickers' ? { backgroundColor: primaryColor, borderColor: primaryColor } : { color: primaryColor, borderColor: primaryColor }}
                     onClick={() => setViewType('individual-stickers')}
                   >
                     <Tag className="me-1" size={16} />
@@ -715,7 +723,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                       }}>
                         <div style={{ marginBottom: '0.8px' }}><strong>ORDEN:</strong> {order.order_number.slice(0, 16)}</div>
                         <div style={{ marginBottom: '0.8px' }}><strong>CLIENTE:</strong> {customer.full_name.slice(0, 16)}</div>
-                        <div style={{ marginBottom: '0.8px' }}><strong>TEL:</strong> {(customer.phone || 'N/A').slice(0, 14)}</div>
+                        <div style={{ marginBottom: '0.8px' }}><strong>TEL:</strong> {(customer.phone || customer.cedula || 'N/A').slice(0, 14)}</div>
+                        {customer.cedula && <div style={{ marginBottom: '0.8px' }}><strong>CÉDULA:</strong> {customer.cedula.slice(0, 14)}</div>}
                         <div style={{ marginBottom: '0.8px' }}><strong>SERIE:</strong> {(order.serial_number || 'N/A').slice(0, 16)}</div>
                         <div style={{ fontSize: '8px', marginTop: '0.5px' }}>
                           <strong>PROBLEMA:</strong>
@@ -761,7 +770,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                       
                       <div className="mb-2 pb-2" style={{ borderBottom: '1px dashed #ccc' }}>
                         <div><strong>CLIENTE:</strong> {customer.full_name}</div>
-                        {customer.phone && <div><strong>TEL:</strong> {customer.phone}</div>}
+                        {(customer.phone || customer.cedula) && <div><strong>TEL:</strong> {customer.phone || customer.cedula}</div>}
+                        {customer.cedula && <div><strong>CÉDULA:</strong> {customer.cedula}</div>}
                       </div>
                       
                       <div className="mb-2 pb-2" style={{ borderBottom: '1px dashed #ccc' }}>
@@ -819,7 +829,8 @@ const MultipleOrdersComandaPreview: React.FC<MultipleOrdersComandaPreviewProps> 
                 </button>
                 
                 <button
-                  className="btn btn-success"
+                  className="btn text-white"
+                  style={{ backgroundColor: secondaryColor, borderColor: secondaryColor }}
                   onClick={handleDownloadPDF}
                 >
                   <Download size={16} className="me-1" />

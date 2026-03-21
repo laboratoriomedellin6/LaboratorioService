@@ -1,6 +1,7 @@
+import { useEffect } from 'react'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { RouterProvider } from './contexts/RouterContext'
-import { useDynamicPageInfo } from './hooks'
+import { useCompanySettings, useDynamicPageInfo } from './hooks'
 import Login from './components/Login'
 import Layout from './components/Layout'
 import PageRenderer from './components/PageRenderer'
@@ -8,9 +9,20 @@ import InviteAcceptance from './components/InviteAcceptance'
 
 function AppContent() {
   const { user, loading } = useAuth()
+  const { settings } = useCompanySettings()
   
   // Actualizar título y favicon dinámicamente desde la configuración
   useDynamicPageInfo()
+
+  // Publicar colores del tema a variables CSS globales para modales y UI compartida
+  useEffect(() => {
+    const root = document.documentElement
+    const primaryColor = settings?.primary_color || '#0d6efd'
+    const secondaryColor = settings?.secondary_color || '#6c757d'
+
+    root.style.setProperty('--app-theme-primary', primaryColor)
+    root.style.setProperty('--app-theme-secondary', secondaryColor)
+  }, [settings?.primary_color, settings?.secondary_color])
 
   if (loading) {
     return (

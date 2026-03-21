@@ -208,7 +208,7 @@ const CustomerSearch: React.FC = () => {
                     <input
                       type="text"
                       className="form-control border-start-0"
-                      placeholder="Buscar por nombre, celular o email..."
+                      placeholder="Buscar por nombre, cédula, celular o email..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       style={{minHeight: '44px'}}

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useCompanySettings } from '../../hooks'
 
 interface CustomModalProps {
   isOpen: boolean
@@ -33,6 +34,10 @@ export const CustomModal: React.FC<CustomModalProps> = ({
   textInputPlaceholder = 'Escribe aquí...',
   textInputRequired = false
 }) => {
+  const { settings } = useCompanySettings()
+  const primaryColor = settings?.primary_color || '#0d6efd'
+  const secondaryColor = settings?.secondary_color || '#6c757d'
+
   if (!isOpen) return null
 
   const getIconAndColor = () => {
@@ -40,37 +45,37 @@ export const CustomModal: React.FC<CustomModalProps> = ({
       case 'success':
         return {
           icon: '✅',
-          headerClass: 'bg-success text-white',
-          iconClass: 'text-success'
+          headerStyle: { backgroundColor: primaryColor, color: '#fff' },
+          iconStyle: { color: primaryColor }
         }
       case 'error':
         return {
           icon: '❌',
-          headerClass: 'bg-danger text-white',
-          iconClass: 'text-danger'
+          headerStyle: { backgroundColor: '#dc3545', color: '#fff' },
+          iconStyle: { color: '#dc3545' }
         }
       case 'warning':
         return {
           icon: '⚠️',
-          headerClass: 'bg-warning text-dark',
-          iconClass: 'text-warning'
+          headerStyle: { backgroundColor: secondaryColor, color: '#fff' },
+          iconStyle: { color: secondaryColor }
         }
       case 'confirm':
         return {
           icon: '❓',
-          headerClass: 'bg-primary text-white',
-          iconClass: 'text-primary'
+          headerStyle: { backgroundColor: primaryColor, color: '#fff' },
+          iconStyle: { color: primaryColor }
         }
       default:
         return {
           icon: 'ℹ️',
-          headerClass: 'bg-info text-white',
-          iconClass: 'text-info'
+          headerStyle: { backgroundColor: primaryColor, color: '#fff' },
+          iconStyle: { color: primaryColor }
         }
     }
   }
 
-  const { icon, headerClass, iconClass } = getIconAndColor()
+  const { icon, headerStyle, iconStyle } = getIconAndColor()
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -97,7 +102,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content shadow-lg border-0">
-          <div className={`modal-header border-0 ${headerClass}`}>
+          <div className="modal-header border-0" style={headerStyle}>
             <h5 className="modal-title d-flex align-items-center">
               <span className="me-2" style={{ fontSize: '1.2rem' }}>{icon}</span>
               {title}
@@ -111,7 +116,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({
           </div>
           <div className="modal-body text-center py-4">
             {!showTextInput && (
-              <div className={`mb-3 ${iconClass}`} style={{ fontSize: '3rem' }}>
+              <div className="mb-3" style={{ fontSize: '3rem', ...iconStyle }}>
                 {icon}
               </div>
             )}
@@ -140,6 +145,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({
               <button 
                 type="button" 
                 className="btn btn-outline-secondary me-2"
+                style={{ color: secondaryColor, borderColor: secondaryColor }}
                 onClick={onClose}
               >
                 {cancelText}
@@ -147,12 +153,12 @@ export const CustomModal: React.FC<CustomModalProps> = ({
             )}
             <button 
               type="button" 
-              className={`btn ${
-                type === 'error' ? 'btn-danger' : 
-                type === 'success' ? 'btn-success' : 
-                type === 'warning' ? 'btn-warning' : 
-                'btn-primary'
-              } ${textInputRequired && showTextInput && (!textInputValue || !textInputValue.trim()) ? 'disabled' : ''}`}
+              className={`btn ${textInputRequired && showTextInput && (!textInputValue || !textInputValue.trim()) ? 'disabled' : ''}`}
+              style={{
+                backgroundColor: type === 'error' ? '#dc3545' : (type === 'warning' ? secondaryColor : primaryColor),
+                borderColor: type === 'error' ? '#dc3545' : (type === 'warning' ? secondaryColor : primaryColor),
+                color: '#fff'
+              }}
               onClick={handleConfirm}
               disabled={textInputRequired && showTextInput && (!textInputValue || !textInputValue.trim())}
             >

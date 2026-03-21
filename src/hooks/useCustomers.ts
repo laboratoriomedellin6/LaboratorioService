@@ -74,6 +74,55 @@ export const useCustomers = (autoRefresh: boolean = false) => {
     }
   }
 
+  const getCustomerByIdentifier = async (identifier: string): Promise<Customer | null> => {
+    try {
+      const value = identifier.trim()
+      const { data, error } = await supabase
+        .from('customers')
+        .select('*')
+        .or(`cedula.eq.${value},phone.eq.${value}`)
+        .limit(1)
+        .maybeSingle()
+
+      if (error) {
+        console.error('❌ Error buscando cliente por identificador:', error)
+        if (error.code === 'PGRST116') {
+          return null
+        }
+        throw error
+      }
+
+      return data
+    } catch (err) {
+      console.error('❌ Error completo buscando cliente por identificador:', err)
+      return null
+    }
+  }
+
+  const getCustomerByPhone = async (phone: string): Promise<Customer | null> => {
+    try {
+      const value = phone.trim()
+      const { data, error } = await supabase
+        .from('customers')
+        .select('*')
+        .eq('phone', value)
+        .maybeSingle()
+
+      if (error) {
+        console.error('❌ Error buscando cliente por teléfono:', error)
+        if (error.code === 'PGRST116') {
+          return null
+        }
+        throw error
+      }
+
+      return data
+    } catch (err) {
+      console.error('❌ Error completo buscando cliente por teléfono:', err)
+      return null
+    }
+  }
+
   const createCustomer = async (customerData: CreateCustomerData): Promise<Customer | null> => {
     try {
       const { data, error } = await supabase
@@ -144,6 +193,8 @@ export const useCustomers = (autoRefresh: boolean = false) => {
     lastRefresh,
     fetchCustomers,
     getCustomerByCedula,
+    getCustomerByIdentifier,
+    getCustomerByPhone,
     createCustomer,
     updateCustomer,
     deleteCustomer,

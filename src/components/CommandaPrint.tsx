@@ -135,7 +135,8 @@ ${lineSeparator}
 CLIENTE:
 ${lineSeparator}
 Nombre: ${customer.full_name}
-${customer.phone ? `Tel: ${customer.phone}` : ''}
+${(customer.phone || customer.cedula) ? `Tel: ${customer.phone || customer.cedula}` : ''}
+${customer.cedula ? `Cedula: ${customer.cedula}` : ''}
 ${customer.email ? `Email: ${customer.email}` : ''}
 
 ${lineSeparator}
@@ -182,7 +183,8 @@ Sistema: GameBoxService v1.0
 ^FO250,140^A0N,15,15^FDFECHA: ${formatDate(order.created_at).split(' ')[0]}^FS
 
 ^FO50,170^A0N,15,15^FDCLIENTE: ${customer.full_name}^FS
-${customer.phone ? `^FO50,190^A0N,15,15^FDTEL: ${customer.phone}^FS` : ''}
+${(customer.phone || customer.cedula) ? `^FO50,190^A0N,15,15^FDTEL: ${customer.phone || customer.cedula}^FS` : ''}
+${customer.cedula ? `^FO250,190^A0N,15,15^FDCED: ${customer.cedula}^FS` : ''}
 
 ^FO50,220^A0N,15,15^FDDISPOSITIVO: ${order.device_type}^FS
 ^FO50,260^A0N,15,15^FDMARCA: ${order.device_brand}^FS
